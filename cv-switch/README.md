@@ -1,0 +1,1 @@
+pengukuran bounce pada sakelar
