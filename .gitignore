@@ -39,3 +39,14 @@ cv-switch/sakelar.txt
 *.o
 udp-server/build/Debug/Cygwin-Windows/main.o.d
 *.d
+*.cbi
+*.atsln
+*.fct
+*.prj~
+cv-kendali-motor/kendali.txt
+*.ol
+*.al
+*.obj
+*.str1
+*.a
+cv-kendali-motor/Debug/List/kendali.asm
