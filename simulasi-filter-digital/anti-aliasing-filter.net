@@ -1,0 +1,7 @@
+* K:\work\embedded\simulasi-filter-digital\anti-aliasing-filter.asc
+R1 N001 OUTPUT 100 tol=1 pwr=0.1
+C1 OUTPUT 0 1µ V=4 Irms=0 Rser=0 Lser=0 mfg="Murata" pn="GRM152R60G105ME15" type="X5R"
+V1 N001 0 SINE(0 1 1000 0 0 0 10)
+.tran 0 .01 0 .001 startup
+.backanno
+.end
