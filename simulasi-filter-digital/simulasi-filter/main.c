@@ -31,34 +31,27 @@ float filter_moving_average(float input[3]) {
  * 
  */
 int main(int argc, char** argv) {
-
     char output_filename[] = "simulasi-filter.csv";
-
-
-
     float delay_line[3];
     // inisialisasi delay line
-
     delay_line[0] = 0;
     delay_line[1] = 0;
     delay_line[2] = 0;
     char data[BUFFER_LENGTH];
-    char filename[] = "../anti-aliasing-out_Output_mono.csv";
+    char filename[] = "../anti-aliasing-out.csv";
     FILE *fp;
     FILE *output_fp;
-
     output_fp = fopen(output_filename, "w"); // file output
-
-
+    fprintf(output_fp, "n,vin,lpf_out,filter_out\n");
     fp = fopen(filename, "r");
     if (fp != NULL && output_fp != NULL) { // kedua file harus dapat dibuka
         printf("read file %s ok\n", filename);
-        fgets(data, BUFFER_LENGTH, fp);// buang baris pertama, karena isinya nama kolom
+        fgets(data, BUFFER_LENGTH, fp); // buang baris pertama, karena isinya nama kolom
         while (fgets(data, BUFFER_LENGTH, fp) != NULL) {
             float output; // output filter sesaat
-            int baris = 0; // menandai angka itu di kolom berapa
+            int kolom = 0; // menandai angka itu di kolom berapa
             printf("%s\n", data);
-            int angka_waktu, angka_tegangan;
+            int angka_waktu, angka_input, angka_output_lpf;
 
             int init_size = strlen(data);
             char delim[] = ",";
@@ -71,22 +64,26 @@ int main(int argc, char** argv) {
                 angka = atoi(ptr);
                 printf("angka %d\n", angka);
                 ptr = strtok(NULL, delim);
-                if (baris == 0) {
+                if (kolom == 0) {
                     angka_waktu = angka;
                 }
-                if (baris == 1) {
-                    angka_tegangan = angka;
+                if (kolom == 1) {
+                    angka_input = angka;
                 }
-                baris++;
+                if (kolom == 2) {
+                    angka_output_lpf = angka;
+                }
+
+                kolom++;
             }
-            printf("waktu: %d tegangan: %d\n", angka_waktu, angka_tegangan);
+            printf("waktu: %d vin: %d vout:%d\n", angka_waktu, angka_input, angka_output_lpf);
 
             delay_line[2] = delay_line[1];
             delay_line[1] = delay_line[0];
-            delay_line[0] = angka_tegangan;
-            output = filter_moving_average(delay_line);
+            delay_line[0] = angka_output_lpf;
+            output = filter_moving_average(delay_line); // hitung output filter digital
             printf("output %f\n", output);
-            fprintf(output_fp, "%d,%d,%f\n", angka_waktu, angka_tegangan, output);
+            fprintf(output_fp, "%d,%d,%d,%f\n", angka_waktu, angka_input, angka_output_lpf, output);
         }
         fclose(fp);
         fclose(output_fp);
