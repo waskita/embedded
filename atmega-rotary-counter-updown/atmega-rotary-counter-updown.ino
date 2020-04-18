@@ -59,8 +59,8 @@ char DecodeRotary(bool   pin_A, bool  pin_A_prev, bool  pin_B, bool  pin_B_prev)
 void ISR_pin_A() {
   char delta;
   bool  pin_A, pin_B;
-  pin_A = digitalRead(2);
-  pin_B = digitalRead(3);
+  pin_A = digitalRead(ENCODER_A);
+  pin_B = digitalRead(ENCODER_B);
 
   delta = DecodeRotary(pin_A, pin_A_prev, pin_B, pin_B_prev);
   posisi += delta;
@@ -72,8 +72,8 @@ void ISR_pin_A() {
 void ISR_pin_B() {
   char delta;
   bool  pin_A, pin_B;
-  pin_A = digitalRead(2);
-  pin_B = digitalRead(3);
+  pin_A = digitalRead(ENCODER_A);
+  pin_B = digitalRead(ENCODER_B);
 
   delta = DecodeRotary(pin_A, pin_A_prev, pin_B, pin_B_prev);
   posisi += delta;
