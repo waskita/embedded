@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 #include "string.h"
+#include "math.h"
 
 /**
  * Filter Moving Average sederhana, untuk demo
@@ -31,8 +32,15 @@ float filter_moving_average(float input[3]) {
  * 
  */
 int main(int argc, char** argv) {
+    float waktu = 0;
+    float sampling_rate = 10000; // frekuensi sampling
+    float waktu_step;
+
     char output_filename[] = "simulasi-filter.csv";
+    char dac_filename[] = "dac-output.txt"; // simulasi output DAC
     float delay_line[3];
+
+    waktu_step = 1 / sampling_rate; // penambahan waktu tiap time step, sesuai frekuensi sampling
     // inisialisasi delay line
     delay_line[0] = 0;
     delay_line[1] = 0;
@@ -41,17 +49,23 @@ int main(int argc, char** argv) {
     char filename[] = "../anti-aliasing-out.csv";
     FILE *fp;
     FILE *output_fp;
+    FILE *dac_fp;
     output_fp = fopen(output_filename, "w"); // file output
+    dac_fp = fopen(dac_filename, "w"); // file output
+
     fprintf(output_fp, "n,vin,lpf_out,filter_out\n");
     fp = fopen(filename, "r");
     if (fp != NULL && output_fp != NULL) { // kedua file harus dapat dibuka
+
         printf("read file %s ok\n", filename);
         fgets(data, BUFFER_LENGTH, fp); // buang baris pertama, karena isinya nama kolom
         while (fgets(data, BUFFER_LENGTH, fp) != NULL) {
+
             float output; // output filter sesaat
             int kolom = 0; // menandai angka itu di kolom berapa
             printf("%s\n", data);
-            int angka_waktu, angka_input, angka_output_lpf;
+            int angka_waktu; // waktu integer
+            float angka_input, angka_output_lpf; // sinyal floating point
 
             int init_size = strlen(data);
             char delim[] = ",";
@@ -68,25 +82,44 @@ int main(int argc, char** argv) {
                     angka_waktu = angka;
                 }
                 if (kolom == 1) {
-                    angka_input = angka;
+                    angka_input = angka / 32768.0;
                 }
                 if (kolom == 2) {
-                    angka_output_lpf = angka;
+                    angka_output_lpf = angka / 32768.0;
                 }
-
                 kolom++;
             }
-            printf("waktu: %d vin: %d vout:%d\n", angka_waktu, angka_input, angka_output_lpf);
+            float angka_output_adc = 0;
+            float level_adc = 1024; // jumlah level ADC . 10 bit-> 1024, 8 bit->  256 
+            // kuantisasi output ADC menjadi 12 bit (1024 level)
+            // asumsi angka_output_lpf sudah dipetakan 0 sampai 1 volt (sesuai limit di LTSpice)
+            // simulasi output ADC, dalam praktek bedanya kecil sekali (1/1024)
+            angka_output_adc = (floor(angka_output_lpf * level_adc)) / level_adc;
+            printf("waktu:%d vin:%f lpf_out:%f adc_out:%f\n"
+                    , angka_waktu
+                    , angka_input, angka_output_lpf, angka_output_adc);
 
             delay_line[2] = delay_line[1];
             delay_line[1] = delay_line[0];
             delay_line[0] = angka_output_lpf;
             output = filter_moving_average(delay_line); // hitung output filter digital
             printf("output %f\n", output);
-            fprintf(output_fp, "%d,%d,%d,%f\n", angka_waktu, angka_input, angka_output_lpf, output);
+            fprintf(output_fp, "%d,%f,%f,%f,%f\n"
+                    , angka_waktu
+                    , angka_input
+                    , angka_output_lpf
+                    , angka_output_adc
+                    , output);
+            // output DAC seharusnya dikuantisasi menjadi 12 level sesuai resolusi DAC, namun pada simulasi ini perbedaan kecil saja.
+            int i;
+            for (i = 0; i < 10; i++) {
+                fprintf(dac_fp, "%f,%f\n", waktu + waktu_step / 10 * i, output);
+            }
+            waktu += waktu_step;
         }
         fclose(fp);
         fclose(output_fp);
+        fclose(dac_fp);
 
     } else {
         printf("error read file %s\n", filename);
