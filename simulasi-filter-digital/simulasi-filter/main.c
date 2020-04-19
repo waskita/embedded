@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     output_fp = fopen(output_filename, "w"); // file output
     dac_fp = fopen(dac_filename, "w"); // file output
 
-    fprintf(output_fp, "n,vin,lpf_out,filter_out\n");
+    fprintf(output_fp, "n,vin,lpf_out,filter_out,dac_out\n");
     fp = fopen(filename, "r");
     if (fp != NULL && output_fp != NULL) { // kedua file harus dapat dibuka
 
@@ -111,6 +111,7 @@ int main(int argc, char** argv) {
                     , angka_output_adc
                     , output);
             // output DAC seharusnya dikuantisasi menjadi 12 level sesuai resolusi DAC, namun pada simulasi ini perbedaan kecil saja.
+            // output DAC berupa anak tangga di bawah ini:
             int i;
             for (i = 0; i < 10; i++) {
                 fprintf(dac_fp, "%f,%f\n", waktu + waktu_step / 10 * i, output);

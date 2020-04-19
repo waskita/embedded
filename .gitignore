@@ -50,3 +50,6 @@ cv-kendali-motor/kendali.txt
 *.str1
 *.a
 cv-kendali-motor/Debug/List/kendali.asm
+*.stackdump
+simulasi-filter-digital/arduino-createdata/nbproject/Package-Release.bash
+*.bash
