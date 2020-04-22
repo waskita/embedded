@@ -20,8 +20,10 @@ void loop() {
   unsigned long waktu_awal = millis();
   unsigned long y = 0;
   data = 1.0;
+  Serial.println("start");
   for (y = 0; y < 1000000L; y++) {
     data = data + 1.0; // data mesti diubah terus, supaya tidak dioptimize oleh compiler
+    data = (data+ output)/2; // supaya output tidak dioptimize
     delay_line[2] = delay_line[1];
     delay_line[1] = delay_line[0];
     delay_line[0] = data;
