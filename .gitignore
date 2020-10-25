@@ -53,3 +53,4 @@ cv-kendali-motor/Debug/List/kendali.asm
 *.stackdump
 simulasi-filter-digital/arduino-createdata/nbproject/Package-Release.bash
 *.bash
+*.raw

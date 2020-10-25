@@ -21,8 +21,8 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(3), ISR_pin_B, CHANGE);
 }
 
-int  waktu = 0;
-int  posisi = 0;
+long int  waktu = 0;
+long int  posisi = 0;
 bool pin_A_prev; // status pin 2 sebelumnya
 bool pin_B_prev; // status pin 3 sebelumnya
 
@@ -84,12 +84,27 @@ void ISR_pin_B() {
 
 // the loop function runs over and over again forever
 void loop() {
-  waktu++;
+  static long int posisi_delta, posisi_now, posisi_prev;
+  static long int waktu_now, waktu_prev, waktu_delta;
+  float kecepatan;
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(500);                       // wait for a second
+  delay(100);                       // wait for a second
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(500);                       // wait for a second
-  Serial.print(waktu);
+  delay(100);
+  // wait for a second
+  cli();
+  posisi_now = posisi;
+  waktu_now = millis();
+  sei();
+  posisi_delta = posisi_now - posisi_prev;
+  posisi_prev = posisi_now;
+  waktu_delta = waktu_now - waktu_prev;
+  kecepatan = (float)posisi_delta / (float)waktu_delta;
+  waktu_prev = waktu_now;
+  Serial.print(millis());
   Serial.print(" ");
-  Serial.println(posisi);
+  Serial.print(posisi);
+  Serial.print(" ");
+  Serial.println(kecepatan);
+
 }
