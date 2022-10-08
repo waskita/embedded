@@ -32,27 +32,24 @@ int flag=0;
 // Timer1 output compare A interrupt service routine
 interrupt [TIM1_COMPA] void timer1_compa_isr(void)
 {
-    if(flag==0){    // output untuk mengukur frekuensi interupsi
-        flag=1;
-        PORTD=0;
-    }else{
-        flag=0; 
-        PORTD=255;
-    }
-     
-// Place your code here
-    if((PINB & (1<<4))==0){ // PB4 = 0
-//        PORTB &= ~(1<<5);                  
-        PORTB |= (1<<3); // nyalakan port PB3 , untuk ukur waktu serial  
-        putchar('0');         
-        PORTB &= ~(1<<3);         
-    }else{ // inputnya 1
-//        PORTB |= (1<<5); // nyalakan port 5 PB5                                
-        PORTB |= (1<<3); // nyalakan port PB3 , untuk ukur waktu serial
-        putchar('1');
-//        putchar('x');        
-        PORTB &= ~(1<<3);    
-    }
+    PORTC=~PORTC;
+/*      
+    PORTB=0xff;      
+    putchar(0xaa)    ; 
+    putchar(0xaa)    ;
+    putchar(0xaa)    ;       
+    putchar(0xaa)    ;
+    putchar(0xaa)    ;
+    putchar(0xaa)    ; 
+    putchar(0xaa)    ;
+    putchar(0xaa)    ;       
+    putchar(0xaa)    ;
+    putchar(0xaa)    ;
+
+    
+    PORTB=0x00;
+    putchar('0');
+*/             
 }
 
 void main(void)
@@ -199,8 +196,9 @@ PORTB |= 1<<4; // internal pullup diaktifkan di input
 DDRB |= (1<<5); // port 5 output (onboard LED)
 DDRB |= (1<<3); // port 3 output (onboard LED)
 
-DDRD=0xff; // port D output semua
-
+DDRB=0xff;
+DDRC=0xff;
+// DDRD=0xff; // port D output semua
 while (1)
       {
       // Place your code here
