@@ -9,75 +9,84 @@
 #define OFF_8 108
 #define OFF_9 109
 
-void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
+#define LED_OUTPUT 3
+
+int state = OFF_9;
+
+void fsm_init(int *state) {
+  *state = OFF_9;
 }
 
-void fsm(int  *state, int *output) {
+void fsm(int  *state, int *out) {
   switch (*state) {
     case ON: {
         *state = OFF_1;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_1: {
         *state = OFF_2;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_2: {
         *state = OFF_3;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_3: {
         *state = OFF_4;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_4: {
         *state = OFF_5;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_5: {
         *state = OFF_6;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_6: {
         *state = OFF_7;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_7: {
         *state = OFF_8;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_8: {
         *state = OFF_9;
-        *output = 0;
+        *out = 0;
         break;
       }
     case OFF_9: {
         *state = ON;
-        *output = 1;
+        *out = 1;
         break;
       }
   }
 }
-// the loop function runs over and over again forever
-int state = OFF_9;
-int output;
+
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_OUTPUT, OUTPUT);
+  Serial.begin(115200);
+  fsm_init(&state);
+}
+
 void loop() {
+  int output;
   fsm(&state, &output);
   if (output == 1) {
-    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(LED_OUTPUT, HIGH);
   } else {
-    digitalWrite(LED_BUILTIN, LOW);
+    digitalWrite(LED_OUTPUT, LOW);
   }
   Serial.print("state: ");
   Serial.print(state);
@@ -85,5 +94,8 @@ void loop() {
   Serial.print( output);
   Serial.println();
 
-  delay(500);                       // wait for 1 second
+  delay(500);                       //
+//  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);                       //
+//  digitalWrite(LED_BUILTIN, HIGH);
 }
