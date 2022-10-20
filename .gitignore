@@ -54,3 +54,7 @@ cv-kendali-motor/Debug/List/kendali.asm
 simulasi-filter-digital/arduino-createdata/nbproject/Package-Release.bash
 *.bash
 *.raw
+hil/cli/blt-sinusoidal.jpg
+hil/cli/.ipynb_checkpoints/bilinear-simulasi-checkpoint.ipynb
+hil/cli/blt-sinusoidal-c.jpg
+hil/desktop-lpf/win10-filter.csv
