@@ -23,21 +23,27 @@ void fsm(int  *state, int *out) {
   }
 }
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(LED_OUTPUT, OUTPUT);
-  Serial.begin(115200);
-  fsm_init(&state);
-}
-
-void loop() {
-  int output=0;
-  fsm(&state, &output);
-  if (output == 1) {
+void fsm_output(int output_value) {
+  if (output_value == 1) {
     digitalWrite(LED_OUTPUT, HIGH);
   } else {
     digitalWrite(LED_OUTPUT, LOW);
   }
+}
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_OUTPUT, OUTPUT);
+  Serial.begin(115200);
+  int output = 0;
+  fsm_init(&state);
+  fsm_output(output);
+}
+
+void loop() {
+  int output = 0;
+  fsm(&state, &output);
+  fsm_output(output);
   Serial.print("state: ");
   Serial.print(state);
   Serial.print(" output: ");
