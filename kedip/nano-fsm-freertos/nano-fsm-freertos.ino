@@ -28,46 +28,37 @@ void fsm(int  *state, int *out) {
   }
 }
 
-void blinkLED(void)
-{
-  int output = 0;
-  fsm(&state, &output);
-  if (output == 1) {
+void fsm_output(int output_value) {
+  if (output_value == 1) {
     digitalWrite(LED_OUTPUT, HIGH);
   } else {
     digitalWrite(LED_OUTPUT, LOW);
   }
-  Serial.print("state: ");
-  Serial.print(state);
-  Serial.print(" output: ");
-  Serial.print( output);
-  Serial.println();
 }
 
 void setup() {
+  int output = 0;
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(LED_OUTPUT, OUTPUT);
   Serial.begin(115200);
-
 
   Serial.print("portTICK_PERIOD_MS: ");
   Serial.print(portTICK_PERIOD_MS);
   Serial.println();
 
-
   fsm_init(&state);
+  fsm_output(output);
 
   xTaskCreate(
-    TaskBlinkLED1
-    ,  "TaskBlinkLED1"  // A name just for humans
+    TaskFSM
+    ,  "TaskFSM"  // A name just for humans
     ,  100  // stacksize
     ,  NULL
     ,  2  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,  &xHandle1 );
-
 }
 
-static void TaskBlinkLED1(void *pvParameters) // Main Red LED Flash
+static void TaskFSM(void *pvParameters) 
 {
   TickType_t xLastWakeTime;
   /* The xLastWakeTime variable needs to be initialised with the current tick
@@ -77,7 +68,6 @@ static void TaskBlinkLED1(void *pvParameters) // Main Red LED Flash
   xLastWakeTime = xTaskGetTickCount();
   while (1)
   {
-
     int output = 0;
     fsm(&state, &output);
     if (output == 1) {
@@ -90,9 +80,7 @@ static void TaskBlinkLED1(void *pvParameters) // Main Red LED Flash
     Serial.print(" output: ");
     Serial.print( output);
     Serial.println();
-
-    vTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) ); // perioda 0,5 detik
-
+    vTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) ); // perioda 1 detik
   }
 }
 

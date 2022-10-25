@@ -4,8 +4,9 @@
 #define LED_OUTPUT 3
 int state = OFF;
 
-void fsm_init(int *state) {
+void fsm_init(int *state, int *out) {
   *state = OFF;
+  *out = 0;
 }
 
 void fsm(int  *state, int *out) {
@@ -36,7 +37,7 @@ void setup() {
   pinMode(LED_OUTPUT, OUTPUT);
   Serial.begin(115200);
   int output = 0;
-  fsm_init(&state);
+  fsm_init(&state,&output);
   fsm_output(output);
 }
 
