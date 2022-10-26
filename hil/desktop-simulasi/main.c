@@ -33,13 +33,13 @@ int main()
     float error;
     float Kp;
     float posisi=0;
-    Kp=0.01;
+    Kp=0.5;
     y=0;
     t=-1;
     period=0.01;
 
-    fp = fopen ("win10-filter.csv", "w+");
-    fprintf(fp,"t,xn,yn,posisi\n",t,xn,y);
+    fp = fopen ("win10-simulasi.csv", "w+");
+    fprintf(fp,"t,control,v,x\n",t,xn,y);
 
     filter_init(&xn1,&yn1);
 
@@ -56,7 +56,7 @@ int main()
         xn=Kp*error;
 
         y=filter_run(&xn,&xn1,&yn1);
-        posisi=posisi+y;
+        posisi=posisi+y/100;
         fprintf(fp,"%f,%f,%f,%f\n",t,xn,y,posisi);
     }
     fclose(fp);
