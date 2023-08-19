@@ -1,0 +1,8 @@
+Turn an LED on and off. 
+
+
+Teknik Pemrograman di Arduino IDE:
+
+di Arduino IDE, pilih board ESP32C3 Dev Module, kemudian pilih flashmode “DIO”
+
+Tips dari https://github.com/mboehmerm/Luatos_C3_Core_DIO_SSD1309_I2C_128x64
