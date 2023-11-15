@@ -1,4 +1,5 @@
 // #simulasi kendali PID
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,12 +35,13 @@ int main()
     float Kp;
     float posisi=0;
     Kp=0.01;
+    Kp=0.1;
     y=0;
     t=-1;
     period=0.01;
 
     fp = fopen ("win10-filter.csv", "w+");
-    fprintf(fp,"t,xn,yn,posisi\n",t,xn,y);
+    fprintf(fp,"t,setpoint,xn,yn,posisi\n");
 
     filter_init(&xn1,&yn1);
 
@@ -55,9 +57,13 @@ int main()
         error=setpoint-posisi;
         xn=Kp*error;
 
+        // xn adalah control value
+        // y adalah kecepatan
+
         y=filter_run(&xn,&xn1,&yn1);
         posisi=posisi+y;
-        fprintf(fp,"%f,%f,%f,%f\n",t,xn,y,posisi);
+        fprintf(fp,"%f,%f,%f,%f,%f\n",t,setpoint,xn,y,posisi);
+//         printf("%f,%f,%f,%f,%f\n",t,setpoint,xn,y,posisi);
     }
     fclose(fp);
     return 0;

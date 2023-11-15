@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1695001090 source:c:\work\embedded\hil\fsm\main.c
+	<stdio.h>
+	<stdlib.h>
+
