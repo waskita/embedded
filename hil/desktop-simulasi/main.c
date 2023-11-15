@@ -36,12 +36,13 @@ int main()
     float posisi=0;
     Kp=0.01;
     Kp=0.1;
+    Kp=2;
     y=0;
     t=-1;
     period=0.01;
 
-    fp = fopen ("win10-filter.csv", "w+");
-    fprintf(fp,"t,setpoint,xn,yn,posisi\n");
+    fp = fopen ("win10-pid.csv", "w+");
+    fprintf(fp,"t,setpoint,control,v,x\n");
 
     filter_init(&xn1,&yn1);
 
@@ -61,9 +62,8 @@ int main()
         // y adalah kecepatan
 
         y=filter_run(&xn,&xn1,&yn1);
-        posisi=posisi+y;
+        posisi=posisi+y*period;
         fprintf(fp,"%f,%f,%f,%f,%f\n",t,setpoint,xn,y,posisi);
-//         printf("%f,%f,%f,%f,%f\n",t,setpoint,xn,y,posisi);
     }
     fclose(fp);
     return 0;

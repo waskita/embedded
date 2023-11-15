@@ -1,0 +1,1 @@
+pengujian kecepatan ADC pada Arduino Nano ATmega328
